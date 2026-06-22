@@ -1,0 +1,1000 @@
+/* ============================================================================
+   LIFE / HOY — Sorbits Console
+   Hoy primero. Denso, hairline, el color es urgencia. Consume --ds-*.
+   ============================================================================ */
+
+.life-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  font-family: var(--ds-font);
+  color: var(--ds-text);
+  background: var(--ds-bg);
+}
+
+/* —— Subnav: subrayado —— */
+.life-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  padding: 0 1.15rem;
+  border-bottom: 1px solid var(--ds-line);
+  background: var(--ds-bg);
+}
+
+.life-subnav__btn {
+  position: relative;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ds-text-muted);
+  font-family: var(--ds-font);
+  font-size: 0.8125rem;
+  font-weight: 450;
+  padding: 0.6rem 0 0.55rem;
+  cursor: pointer;
+  transition: color 0.12s var(--ds-ease);
+}
+
+.life-subnav__btn:hover { color: var(--ds-text); }
+
+.life-subnav__btn.on {
+  color: var(--ds-text);
+  font-weight: 600;
+}
+
+.life-subnav__btn.on::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--ds-text);
+  border-radius: 1px 1px 0 0;
+}
+
+.life-subnav__badge {
+  margin-left: 0.35rem;
+  min-width: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-inset);
+  color: var(--ds-text-muted);
+  border: 1px solid var(--ds-line);
+  font-family: var(--ds-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.life-body {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.95rem 1.15rem 1.25rem;
+  background: var(--ds-bg);
+}
+
+.life-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.life-section-head__title {
+  margin: 0;
+  font-family: var(--ds-font);
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.life-section-head__hint {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ds-text-muted);
+  line-height: 1.4;
+  max-width: 36rem;
+}
+
+/* —— Hero contadores: plano, hairline —— */
+.life-today-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.15rem;
+}
+
+.life-today-hero--has-overdue {
+  grid-template-columns: minmax(8.5rem, 1.35fr) repeat(3, minmax(7rem, 1fr));
+}
+
+.life-today-hero__stat {
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+  padding: 0.7rem 0.8rem;
+}
+
+.life-today-hero__stat--priority {
+  padding: 0.9rem 0.95rem;
+  border-color: color-mix(in srgb, var(--ds-urgent) 35%, var(--ds-line));
+  background: color-mix(in srgb, var(--ds-urgent-soft) 60%, var(--ds-surface));
+}
+
+.life-today-hero__stat--quiet { opacity: 0.9; }
+
+.life-today-hero__stat--quiet .life-today-hero__value--text {
+  font-family: var(--ds-font);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ds-text-muted);
+}
+
+.life-today-hero__value {
+  display: block;
+  font-family: var(--ds-mono);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ds-text);
+}
+
+.life-today-hero__stat--priority .life-today-hero__value {
+  font-size: 2.25rem;
+  color: var(--ds-urgent);
+}
+
+.life-today-hero__stat--focus .life-today-hero__value { color: var(--ds-warn); }
+
+.life-today-hero__label {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--ds-mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ds-text-faint);
+}
+
+.life-today-meta {
+  margin: 0 0 0.75rem;
+  font-family: var(--ds-mono);
+  font-size: 0.68rem;
+  color: var(--ds-text-faint);
+}
+
+.life-widget-group-label {
+  margin: 0 0 0.5rem;
+  font-family: var(--ds-mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-text-faint);
+}
+
+.life-widget-group-label:not(:first-of-type) { margin-top: 1.3rem; }
+
+.life-widget-grid {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+
+.life-widget-grid--day { margin-bottom: 0.35rem; }
+
+.life-widget {
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+  padding: 0.75rem 0.85rem;
+}
+
+.life-widget h3 {
+  margin: 0 0 0.55rem;
+  font-family: var(--ds-mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ds-text-faint);
+}
+
+.life-widget-cta {
+  display: block;
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  border: none;
+  border-radius: var(--ds-r2);
+  background: transparent;
+  color: var(--ds-text);
+  font-family: var(--ds-font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s var(--ds-ease);
+}
+
+.life-widget-cta:hover { background: var(--ds-raised); }
+
+/* —— Captura rápida: una línea = una tarea —— */
+.life-quickadd {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0 0.85rem;
+  height: 2.85rem;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+  transition: border-color 0.12s var(--ds-ease), box-shadow 0.12s var(--ds-ease);
+}
+
+.life-quickadd:focus-within {
+  border-color: var(--ds-accent);
+  box-shadow: 0 0 0 3px var(--ds-accent-soft);
+}
+
+.life-quickadd__plus {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--ds-text-faint);
+  font-weight: 400;
+}
+
+.life-quickadd:focus-within .life-quickadd__plus {
+  color: var(--ds-accent);
+}
+
+.life-quickadd__input {
+  flex: 1;
+  min-width: 0;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 0.9rem;
+  color: var(--ds-text);
+}
+
+.life-quickadd__input:focus {
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.life-quickadd__chips {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.life-quickadd__chip {
+  font-family: var(--ds-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.14rem 0.45rem;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-inset);
+  color: var(--ds-text-muted);
+  white-space: nowrap;
+}
+
+.life-quickadd__chip--today { color: var(--ds-warn); background: var(--ds-warn-soft); }
+.life-quickadd__chip--overdue { color: var(--ds-urgent); background: var(--ds-urgent-soft); }
+.life-quickadd__chip--soon { color: var(--ds-accent-hi); background: var(--ds-accent-soft); }
+.life-quickadd__chip--tag { color: var(--ds-text-muted); }
+
+.life-quickadd__hint {
+  flex-shrink: 0;
+  font-family: var(--ds-mono);
+  font-size: 0.7rem;
+  color: var(--ds-text-faint);
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r1);
+  border-bottom-width: 2px;
+}
+
+/* —— Cockpit: filtros + secciones —— */
+.life-cockpit-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.life-cockpit-section {
+  margin-bottom: 1.35rem;
+}
+
+.life-cockpit-section .life-widget-group-label {
+  margin-top: 0;
+}
+
+/* —— Strip de captura sin procesar (promote 1 clic) —— */
+.life-capture-strip {
+  margin-bottom: 1.35rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px dashed var(--ds-line-strong);
+  border-radius: var(--ds-r3);
+  background: color-mix(in srgb, var(--ds-warn-soft) 30%, var(--ds-surface));
+}
+
+.life-capture-strip .ds-eyebrow {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.life-capture-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--ds-line);
+}
+
+.life-capture-strip__item:first-of-type {
+  border-top: none;
+}
+
+.life-capture-strip__text {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.82rem;
+  color: var(--ds-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.life-capture-strip__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.3rem;
+}
+
+.life-capture-strip .life-widget-cta {
+  margin-top: 0.4rem;
+}
+
+/* —— Tareas: lista enmarcada de líneas finas + franja de urgencia 3px —— */
+.life-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  overflow: hidden;
+  background: var(--ds-surface);
+}
+
+.life-task-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0.55rem;
+  padding: 0.5rem 0.65rem 0.5rem 0.85rem;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--ds-line);
+  background: transparent;
+  overflow: hidden;
+  transition: background 0.1s var(--ds-ease);
+}
+
+.life-task-list .life-task-row:last-child { border-bottom: none; }
+
+.life-task-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--ds-text-faint);
+  opacity: 0.3;
+}
+
+.life-task-row--stripe-overdue::before { background: var(--ds-urgent); opacity: 1; }
+.life-task-row--stripe-today::before { background: var(--ds-warn); opacity: 1; }
+.life-task-row--stripe-soon::before,
+.life-task-row--stripe-calm::before { background: var(--ds-text-faint); opacity: 0.4; }
+
+.life-task-row:hover { background: var(--ds-raised); }
+
+.life-task-row__check {
+  flex-shrink: 0;
+  align-self: center;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--ds-accent);
+  cursor: pointer;
+}
+
+.life-task-row__body {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.life-task-row__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.life-task-row__title {
+  font-family: var(--ds-font);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.35;
+  word-break: break-word;
+  color: var(--ds-text);
+}
+
+.life-task-row__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.life-task-row__meta,
+.life-task-row__workspace,
+.life-task-row__column {
+  font-size: 0.7rem;
+  color: var(--ds-text-faint);
+}
+
+.life-task-row__column {
+  padding: 0.06rem 0.38rem;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-inset);
+}
+
+.life-task-row__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
+}
+
+.life-task-due {
+  flex-shrink: 0;
+  padding: 0.08rem 0.4rem;
+  border-radius: var(--ds-r1);
+  font-family: var(--ds-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--ds-inset);
+  color: var(--ds-text-muted);
+}
+
+.life-task-due--overdue { color: var(--ds-urgent); background: var(--ds-urgent-soft); }
+.life-task-due--today { color: var(--ds-warn); background: var(--ds-warn-soft); }
+.life-task-due--soon,
+.life-task-due--calm { color: var(--ds-text-muted); background: var(--ds-inset); }
+
+.life-tag {
+  display: inline-block;
+  padding: 0.1rem 0.42rem;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-inset);
+  border: 1px solid var(--ds-line);
+  font-family: var(--ds-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--ds-text-muted);
+}
+
+/* franja para fila enfocada por teclado */
+.life-task-row:focus-visible {
+  outline: none;
+  background: var(--ds-raised);
+  box-shadow: inset 0 0 0 1px var(--ds-accent-line);
+}
+
+/* edición de título en sitio */
+.life-task-row__edit {
+  flex: 1;
+  min-width: 0;
+  align-self: center;
+  border: 1px solid var(--ds-accent) !important;
+  border-radius: var(--ds-r1);
+  background: var(--ds-inset) !important;
+  color: var(--ds-text);
+  font-size: 0.86rem;
+  padding: 0.3rem 0.45rem !important;
+}
+
+/* cluster de acciones rápidas — aparece al hover/focus */
+.life-task-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+  align-self: center;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 0.12s var(--ds-ease), transform 0.12s var(--ds-ease);
+}
+
+.life-task-row:hover .life-task-row__actions,
+.life-task-row:focus-within .life-task-row__actions,
+.life-task-row:focus-visible .life-task-row__actions {
+  opacity: 1;
+  transform: none;
+}
+
+/* en touch/coarse pointer siempre visibles */
+@media (hover: none) {
+  .life-task-row__actions {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.life-task-row__actions button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ds-text-muted);
+  font-family: var(--ds-font);
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 0.28rem 0.45rem;
+  border-radius: var(--ds-r1);
+  cursor: pointer;
+  transition: background 0.1s var(--ds-ease), color 0.1s var(--ds-ease);
+}
+
+.life-task-row__actions button:hover {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border-color: var(--ds-line);
+}
+
+/* —— Toolbar de tareas (filtros subrayados) —— */
+.life-task-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+}
+
+.life-task-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.life-task-filter-chip {
+  position: relative;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ds-text-muted);
+  font-family: var(--ds-font);
+  font-size: 0.75rem;
+  font-weight: 450;
+  padding: 0.32rem 0.5rem 0.42rem;
+  cursor: pointer;
+  transition: color 0.12s var(--ds-ease);
+}
+
+.life-task-filter-chip:hover { color: var(--ds-text); }
+
+.life-task-filter-chip.on {
+  color: var(--ds-text);
+  font-weight: 600;
+}
+
+.life-task-filter-chip.on::after {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  right: 0.35rem;
+  bottom: 0.12rem;
+  height: 2px;
+  background: var(--ds-text);
+}
+
+.life-task-toolbar__tag {
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 18rem;
+}
+
+/* —— Inbox —— */
+.life-inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.life-inbox-card {
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+  padding: 0.8rem 0.9rem;
+}
+
+.life-inbox-card__content {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.life-inbox-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  margin-top: 0.45rem;
+  font-family: var(--ds-mono);
+  font-size: 0.68rem;
+  color: var(--ds-text-faint);
+}
+
+.life-inbox-card__kind {
+  padding: 0.06rem 0.38rem;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-inset);
+  color: var(--ds-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.life-inbox-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--ds-line);
+}
+
+.life-inbox-card--highlight {
+  border-color: var(--ds-accent);
+  box-shadow: 0 0 0 2px var(--ds-accent-soft);
+}
+
+.life-inbox-snippet {
+  margin: 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--ds-r2);
+  background: var(--ds-inset);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ds-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.life-inbox-warning {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--ds-r2);
+  border: 1px solid color-mix(in srgb, var(--ds-warn) 40%, var(--ds-line));
+  background: var(--ds-warn-soft);
+  font-size: 0.8125rem;
+}
+
+/* —— Vacíos —— */
+.life-empty {
+  color: var(--ds-text-muted);
+  font-size: 0.85rem;
+  padding: 0.75rem 0;
+  text-align: center;
+}
+
+.life-empty--card {
+  border: 1px dashed var(--ds-line-strong);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+  padding: 1.25rem 1rem;
+}
+
+/* —— Workspaces —— */
+.life-workspace-grid {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.life-workspace-card {
+  text-align: left;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  background: var(--ds-surface);
+  padding: 0.8rem;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: border-color 0.12s var(--ds-ease), background 0.1s var(--ds-ease);
+}
+
+.life-workspace-card:hover {
+  background: var(--ds-raised);
+  border-color: var(--ds-line-strong);
+}
+
+.life-workspace-detail {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+/* —— Contactos: lista hairline —— */
+.life-contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r3);
+  overflow: hidden;
+  background: var(--ds-surface);
+}
+
+.life-contact-list li { border-bottom: 1px solid var(--ds-line); }
+.life-contact-list li:last-child { border-bottom: none; }
+
+.life-contact-list button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 0.65rem 0.85rem;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.1s var(--ds-ease);
+}
+
+.life-contact-list button:hover { background: var(--ds-raised); }
+
+/* —— Captura rápida (sidebar) —— */
+.sidebar-life-capture-btn {
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: var(--ds-r2);
+  border: 1px dashed var(--ds-line-strong);
+  background: transparent;
+  color: var(--ds-text-muted);
+  font-size: 0.78rem;
+  padding: 0.4rem 0.55rem;
+  cursor: pointer;
+  transition: border-color 0.12s var(--ds-ease), color 0.12s var(--ds-ease);
+}
+
+.sidebar-life-capture-btn:hover {
+  border-color: var(--ds-accent);
+  color: var(--ds-text);
+}
+
+.sidebar--collapsed .sidebar-life-capture-wrap {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  margin-bottom: 0;
+}
+
+.sidebar--collapsed .sidebar-life-capture-btn {
+  width: var(--sidebar-rail-item);
+  height: var(--sidebar-rail-item);
+  padding: 0;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}
+
+/* —— Tag input —— */
+.life-tag-input { position: relative; }
+.life-tag-input input { width: 100%; }
+
+.life-tag-suggestions {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 2px);
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r2);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-shadow-pop);
+  max-height: 10rem;
+  overflow: auto;
+}
+
+.life-tag-suggestions button {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.8125rem;
+  color: var(--ds-text);
+  cursor: pointer;
+}
+
+.life-tag-suggestions button:hover { background: var(--ds-raised); }
+
+/* —— FAB + modal captura —— */
+.life-capture-fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 900;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--ds-r-pill);
+  border: 1px solid var(--ds-line);
+  background: var(--ds-raised);
+  color: var(--ds-text);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--ds-shadow-pop);
+}
+
+.life-capture-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background: var(--ds-overlay);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh 1rem 1rem;
+}
+
+.life-capture-modal {
+  width: min(32rem, 100%);
+  border-radius: var(--ds-r3);
+  border: 1px solid var(--ds-line);
+  background: var(--ds-surface);
+  padding: 1.1rem 1.15rem;
+  box-shadow: var(--ds-shadow-pop);
+}
+
+.life-capture-modal__title {
+  margin: 0 0 0.25rem;
+  font-family: var(--ds-font);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.life-capture-modal__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ds-text-muted);
+}
+
+.life-capture-modal textarea {
+  width: 100%;
+  min-height: 7.5rem;
+  resize: vertical;
+  border-radius: var(--ds-r2);
+  border: 1px solid var(--ds-line);
+  background: var(--ds-inset);
+  color: var(--ds-text);
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  line-height: 1.45;
+}
+
+.life-capture-modal textarea:focus {
+  outline: none;
+  border-color: var(--ds-accent);
+  box-shadow: 0 0 0 3px var(--ds-accent-soft);
+}
+
+.life-capture-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.life-convert-modal__source {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--ds-r2);
+  background: var(--ds-inset);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ds-text-muted);
+  white-space: pre-wrap;
+  max-height: 6rem;
+  overflow: auto;
+}
+
+.life-contact-picks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 9rem;
+  overflow: auto;
+  padding: 0.35rem 0;
+}
+
+.life-contact-picks label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.life-file-contacts {
+  padding: 0.65rem 0.85rem;
+  border-top: 1px solid var(--ds-line);
+  background: var(--ds-inset);
+}
+
+.life-file-contacts__title {
+  font-family: var(--ds-mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  color: var(--ds-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+  .life-body { padding: 0.85rem; }
+
+  .life-today-hero--has-overdue {
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  }
+
+  .life-today-hero__value { font-size: 1.6rem; }
+
+  .life-task-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .life-task-toolbar__tag { max-width: none; }
+}

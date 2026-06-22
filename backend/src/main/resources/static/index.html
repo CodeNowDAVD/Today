@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Today — Spacework + Hoy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        var p = localStorage.getItem("sorbits.theme") || "system";
+        var t =
+          p === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : p;
+        document.documentElement.setAttribute("data-theme", t);
+        document.documentElement.setAttribute("data-theme-pref", p);
+        document.documentElement.style.colorScheme = t;
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-DxRlXB4W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-v_-fACKR.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

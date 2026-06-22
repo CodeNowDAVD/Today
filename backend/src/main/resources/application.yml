@@ -1,0 +1,69 @@
+server:
+  port: ${TODAY_PORT:8082}
+
+spring:
+  application:
+    name: today
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  servlet:
+    multipart:
+      max-file-size: 128MB
+      max-request-size: 132MB
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+
+sorbits:
+  public-base-url: ${TODAY_PUBLIC_BASE_URL:http://localhost:5173}
+  registration:
+    invite-only: ${TODAY_REGISTRATION_INVITE_ONLY:false}
+  mail:
+    enabled: false
+    from: noreply@today.local
+
+app:
+  timezone: ${TODAY_TIMEZONE:America/Mexico_City}
+  files:
+    page-size: 30
+    page-size-max: 100
+  storage:
+    upload-dir: ${TODAY_UPLOAD_DIR:${user.home}/var/today-vault/uploads}
+    trash-retention-days: 30
+    purge-cron: "0 15 4 * * *"
+    onedrive-sync-enabled: false
+  security:
+    jwt-secret: ${JWT_SECRET:dev-only-change-me-use-at-least-64-characters-for-hs512-signing-key!!}
+    jwt-ttl-seconds: ${JWT_TTL_SECONDS:28800}
+    auth-rate-limit:
+      login-per-ip: 100
+      login-per-user: 30
+      register-per-ip: 30
+      login-window-minutes: 15
+      register-window-minutes: 60
+  cors:
+    allowed-origin-patterns:
+      - http://localhost:*
+      - http://127.0.0.1:*
+  office:
+    preview-enabled: false
+    soffice-path: libreoffice
+    cache-dir: ${user.home}/var/today-vault/office-preview
+    cache-max-age-hours: 24
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    mail:
+      enabled: false

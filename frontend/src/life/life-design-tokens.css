@@ -1,0 +1,105 @@
+/**
+ * SOrbitS — tokens semánticos (Vida / Hoy primero, base para el resto en oscuro).
+ * Dorado/rojo = solo urgencia temporal. Navegación = blanco/peso, no acento.
+ */
+
+:root {
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+[data-theme="dark"] {
+  /* Paleta unificada — derivada de los tokens --ds-* (sorbits-ui.css) */
+  --bg-base: var(--ds-bg);
+  --bg-surface: var(--ds-surface);
+  --bg-surface-raised: var(--ds-raised);
+  --text-primary: var(--ds-text);
+  --text-muted: var(--ds-text-muted);
+  --accent-urgent: var(--ds-urgent);
+  --accent-focus: var(--ds-warn);
+  --border-subtle: var(--ds-line);
+
+  --files-canvas: var(--bg-base);
+  --files-surface: var(--bg-base);
+  --files-elevated: var(--bg-surface);
+  --files-inset: var(--bg-base);
+  --files-border: var(--border-subtle);
+  --files-row-hover: var(--bg-surface-raised);
+  --rh-black: var(--bg-base);
+  --rh-elevated: var(--bg-surface);
+  --rh-text: var(--text-primary);
+  --rh-text-muted: var(--text-muted);
+  --rh-sidebar: #101114;
+  --rh-sidebar-elevated: var(--bg-surface);
+  --rh-sidebar-border: var(--border-subtle);
+  --app-control-bg: var(--bg-surface);
+  --app-control-hover: var(--bg-surface-raised);
+  --app-control-border: var(--border-subtle);
+  --sidebar-item-on: var(--bg-surface-raised);
+}
+
+[data-theme="light"] {
+  /* Paleta unificada — claro (deriva de --ds-*) */
+  --bg-base: var(--ds-bg);
+  --bg-surface: var(--ds-surface);
+  --bg-surface-raised: var(--ds-raised);
+  --text-primary: var(--ds-text);
+  --text-muted: var(--ds-text-muted);
+  --accent-urgent: var(--ds-urgent);
+  --accent-focus: var(--ds-warn);
+  --border-subtle: var(--ds-line);
+
+  /* aliases que Life consume y que el dark define globalmente — ahora
+     también disponibles en claro para que el panel no caiga a fallbacks */
+  --files-canvas: var(--bg-base);
+  --files-surface: var(--bg-base);
+  --files-elevated: var(--bg-surface);
+  --files-inset: var(--bg-base);
+  --files-border: var(--border-subtle);
+  --files-row-hover: var(--bg-surface-raised);
+  --rh-text: var(--text-primary);
+  --rh-text-muted: var(--text-muted);
+}
+
+/* Navegación sidebar — activo = superficie + texto, no acento de marca */
+[data-theme="dark"] .nav-item.on {
+  background: var(--bg-surface-raised);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .nav-item.on .nav-item-icon {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .sidebar--collapsed .nav-item.on {
+  background: var(--bg-surface-raised);
+}
+
+[data-theme="dark"] .sidebar--collapsed .nav-item.on .nav-item-icon {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .sidebar-rail-btn.on {
+  background: var(--bg-surface-raised);
+  color: var(--text-primary);
+}
+
+.life-type-display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 32;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.life-type-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.life-type-body {
+  font-family: var(--font-body);
+}

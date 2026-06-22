@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sorbits Console — preview</title>
+    <link rel="stylesheet" href="/src/sorbits-ui.css" />
+    <link rel="stylesheet" href="/src/life/life-design-tokens.css" />
+    <link rel="stylesheet" href="/src/life/life-theme.css" />
+    <link rel="stylesheet" href="/src/spacework-theme.css" />
+    <style>
+      /* base mínima para emular el shell (botones, chrome layout) — solo para el preview */
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--ds-bg); color: var(--ds-text); font-family: var(--ds-font); }
+      .prev-shell { max-width: 1080px; margin: 0 auto; }
+      .prev-toggle {
+        position: fixed; top: 12px; right: 16px; z-index: 100;
+        display: flex; gap: 6px; padding: 4px; border-radius: 999px;
+        background: var(--ds-surface); border: 1px solid var(--ds-line);
+      }
+      .prev-toggle button {
+        border: none; background: transparent; color: var(--ds-text-muted);
+        font: 600 0.72rem var(--ds-mono); letter-spacing: .05em; text-transform: uppercase;
+        padding: 5px 12px; border-radius: 999px; cursor: pointer;
+      }
+      .prev-toggle button.on { background: var(--ds-accent-soft); color: var(--ds-text); }
+      .prev-label { font: 600 0.62rem var(--ds-mono); letter-spacing:.12em; text-transform:uppercase; color: var(--ds-accent); padding: 28px 1.15rem 0; }
+      /* WorkspaceChrome base layout (vive en theme-apple.css en la app real) */
+      .workspace-chrome__titles { display:flex; flex-direction:column; gap:2px; }
+      .workspace-chrome__toolbar { padding: 0 1.15rem .65rem; display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+      /* botones base (emulan .btn de la app) */
+      .btn {
+        display:inline-flex; align-items:center; gap:.4rem; cursor:pointer;
+        font: 500 0.8rem var(--ds-font); padding: .4rem .7rem; border-radius: var(--ds-r2);
+        border: 1px solid var(--ds-line); background: var(--ds-surface); color: var(--ds-text);
+        transition: border-color .12s, background .12s;
+      }
+      .btn:hover { border-color: var(--ds-line-strong); background: var(--ds-raised); }
+      .btn.ghost { background: transparent; border-color: transparent; color: var(--ds-text-muted); }
+      .btn.ghost:hover { color: var(--ds-text); background: var(--ds-raised); }
+      .btn.primary { background: var(--ds-accent); border-color: var(--ds-accent); color: var(--ds-on-accent); font-weight:600; }
+      .btn.primary:hover { background: var(--ds-accent-hi); border-color: var(--ds-accent-hi); }
+      input[type=text], select {
+        font: inherit; padding: .4rem .6rem; border-radius: var(--ds-r2);
+        border: 1px solid var(--ds-line); background: var(--ds-inset); color: var(--ds-text);
+      }
+      .spacework-tabs, .spacework-kanban__board { display:flex; }
+      .spacework-kanban__board { gap: .65rem; align-items:flex-start; }
+      .spacework-kanban__column { flex:1; display:flex; flex-direction:column; min-width:0; }
+      .spacework-kanban__column-head { padding:.5rem .65rem; font: 600 .78rem var(--ds-font); display:flex; align-items:center; }
+      .spacework-kanban__column-head .ds-count { margin-left:auto; }
+      .spacework-kanban__cards { padding:.55rem; display:flex; flex-direction:column; gap:.5rem; }
+      .spacework-kanban__card { padding:.55rem .6rem; }
+      .spacework-kanban__title { font: 500 .82rem var(--ds-font); }
+      .spacework-item-row, .spacework-member-row { display:flex; align-items:center; }
+      .spacework-item-title { font: 500 .86rem var(--ds-font); color: var(--ds-text); text-decoration:none; }
+      .spacework-item-sub { font: 400 .72rem var(--ds-font); color: var(--ds-text-faint); }
+      .spacework-item-actions { display:flex; gap:.35rem; }
+      .life-today-hero__stat { display:flex; flex-direction:column; }
+      h3 { font-weight:600; }
+      .stack { display:flex; flex-direction:column; }
+      /* el preview no da altura de viewport: evita que el flex colapse el body */
+      .prev-shell .life-panel, .prev-shell .spacework-panel { display:block; }
+      .prev-shell .life-body, .prev-shell .spacework-section { overflow:visible; flex:none; }
+      .prev-shell .workspace-chrome { position:static; }
+      /* mostrar acciones de fila para la captura (normalmente solo en hover) */
+      .prev-shell .life-task-row__actions { opacity:1 !important; transform:none !important; }
+    </style>
+  </head>
+  <body>
+    <div class="prev-toggle">
+      <button data-t="dark" class="on">Dark</button>
+      <button data-t="light">Light</button>
+    </div>
+
+    <!-- ============ LIFE / HOY ============ -->
+    <div class="prev-label">Life · Hoy</div>
+    <div class="prev-shell">
+      <section class="life-panel" style="border:1px solid var(--ds-line); border-radius:14px; margin:.65rem 1.15rem; overflow:hidden;">
+        <header class="workspace-chrome">
+          <div class="workspace-chrome__primary">
+            <div class="workspace-chrome__titles">
+              <h1 class="workspace-chrome__title">Vida</h1>
+              <p class="workspace-chrome__subtitle">Hoy, viernes 20 de junio · tu espacio personal</p>
+            </div>
+          </div>
+          <div class="workspace-chrome__secondary">
+            <nav class="life-subnav">
+              <button class="life-subnav__btn on">Hoy</button>
+              <button class="life-subnav__btn">Captura <span class="life-subnav__badge">2</span></button>
+              <button class="life-subnav__btn">Espacios</button>
+              <button class="life-subnav__btn">Personas</button>
+            </nav>
+          </div>
+        </header>
+        <div class="life-body">
+          <!-- barra mágica de captura -->
+          <form class="life-quickadd" onsubmit="return false">
+            <span class="life-quickadd__plus">+</span>
+            <input class="life-quickadd__input" value="Llamar al arquitecto mañana 9am #aurora" />
+            <span class="life-quickadd__chips">
+              <span class="life-quickadd__chip life-quickadd__chip--soon">Mañana · 09:00</span>
+              <span class="life-quickadd__chip life-quickadd__chip--tag">#aurora</span>
+            </span>
+            <kbd class="life-quickadd__hint">↵</kbd>
+          </form>
+
+          <div class="life-today-hero life-today-hero--has-overdue">
+            <div class="life-today-hero__stat life-today-hero__stat--priority">
+              <span class="life-today-hero__value">3</span>
+              <span class="life-today-hero__label">Vencidas</span>
+            </div>
+            <div class="life-today-hero__stat life-today-hero__stat--focus">
+              <span class="life-today-hero__value">5</span>
+              <span class="life-today-hero__label">Para hoy</span>
+            </div>
+            <div class="life-today-hero__stat">
+              <span class="life-today-hero__value">8</span>
+              <span class="life-today-hero__label">Próx. 3 días</span>
+            </div>
+            <div class="life-today-hero__stat life-today-hero__stat--quiet">
+              <span class="life-today-hero__value">2</span>
+              <span class="life-today-hero__label">Capturas</span>
+            </div>
+          </div>
+
+          <div class="life-cockpit-toolbar">
+            <div class="life-task-filter-group">
+              <button class="life-task-filter-chip on">Foco</button>
+              <button class="life-task-filter-chip">Hoy</button>
+              <button class="life-task-filter-chip">Vencidas</button>
+              <button class="life-task-filter-chip">7 días</button>
+              <button class="life-task-filter-chip">Todas</button>
+            </div>
+            <div class="life-task-toolbar__tag">
+              <input type="text" placeholder="Filtrar por etiqueta" style="width:12rem" />
+            </div>
+          </div>
+
+          <!-- strip de captura: promover en 1 clic -->
+          <div class="life-capture-strip">
+            <span class="ds-eyebrow">Captura sin procesar · 2</span>
+            <div class="life-capture-strip__item">
+              <span class="life-capture-strip__text">"Recuérdame mandar la factura del mes a contabilidad antes del viernes"</span>
+              <span class="life-capture-strip__actions">
+                <button class="btn ghost sm">→ Hoy</button>
+                <button class="btn ghost sm">Mañana</button>
+                <button class="btn ghost sm">Editar…</button>
+              </span>
+            </div>
+            <div class="life-capture-strip__item">
+              <span class="life-capture-strip__text">Comité de obra · hoy 17:30 · Sala 2 / Meet</span>
+              <span class="life-capture-strip__actions">
+                <button class="btn ghost sm">→ Hoy</button>
+                <button class="btn ghost sm">Mañana</button>
+                <button class="btn ghost sm">Editar…</button>
+              </span>
+            </div>
+            <button class="life-widget-cta">Ver toda la bandeja →</button>
+          </div>
+
+          <section class="life-cockpit-section">
+            <p class="life-widget-group-label">Vencidas · 1</p>
+            <div class="life-task-list">
+              <article class="life-task-row life-task-row--stripe-overdue">
+                <input type="checkbox" class="life-task-row__check" />
+                <button class="life-task-row__body">
+                  <span class="life-task-row__head">
+                    <span class="life-task-row__title">Enviar cotización a Constructora Vega</span>
+                    <span class="life-task-due life-task-due--overdue">Vencida</span>
+                  </span>
+                  <span class="life-task-row__foot">
+                    <span class="life-task-row__workspace">Personal</span>
+                  </span>
+                  <span class="life-task-row__tags"><span class="life-tag">whatsapp</span><span class="life-tag">urgente</span></span>
+                </button>
+                <div class="life-task-row__actions">
+                  <button>Hoy</button><button>Mañana</button><button>+7d</button><button aria-label="Editar">✎</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="life-cockpit-section">
+            <p class="life-widget-group-label">Hoy · 2</p>
+            <div class="life-task-list">
+              <article class="life-task-row life-task-row--stripe-today">
+                <input type="checkbox" class="life-task-row__check" />
+                <button class="life-task-row__body">
+                  <span class="life-task-row__head">
+                    <span class="life-task-row__title">Llamar al arquitecto por planos del nivel 3</span>
+                    <span class="life-task-due life-task-due--today">16:00</span>
+                  </span>
+                  <span class="life-task-row__foot"><span class="life-task-row__workspace">Personal</span></span>
+                </button>
+                <div class="life-task-row__actions">
+                  <button>Hoy</button><button>Mañana</button><button>+7d</button><button aria-label="Editar">✎</button>
+                </div>
+              </article>
+              <article class="life-task-row life-task-row--stripe-today">
+                <input type="checkbox" class="life-task-row__check" />
+                <button class="life-task-row__body">
+                  <span class="life-task-row__head">
+                    <span class="life-task-row__title">Pagar recibo de luz</span>
+                    <span class="life-task-due life-task-due--today">Hoy</span>
+                  </span>
+                  <span class="life-task-row__foot"><span class="life-task-row__workspace">Personal</span></span>
+                  <span class="life-task-row__tags"><span class="life-tag">casa</span></span>
+                </button>
+                <div class="life-task-row__actions">
+                  <button>Hoy</button><button>Mañana</button><button>+7d</button><button aria-label="Editar">✎</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="life-cockpit-section">
+            <p class="life-widget-group-label">Próximos 3 días · 1</p>
+            <div class="life-task-list">
+              <article class="life-task-row life-task-row--stripe-soon">
+                <input type="checkbox" class="life-task-row__check" />
+                <button class="life-task-row__body">
+                  <span class="life-task-row__head">
+                    <span class="life-task-row__title">Revisar contrato de suministro</span>
+                    <span class="life-task-due life-task-due--soon">Mar 23 jun</span>
+                  </span>
+                  <span class="life-task-row__foot"><span class="life-task-row__workspace">Personal</span></span>
+                </button>
+                <div class="life-task-row__actions">
+                  <button>Hoy</button><button>Mañana</button><button>+7d</button><button aria-label="Editar">✎</button>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ SPACEWORK ============ -->
+    <div class="prev-label">Spacework</div>
+    <div class="prev-shell">
+      <section class="spacework-panel" style="border:1px solid var(--ds-line); border-radius:14px; margin:.65rem 1.15rem; overflow:hidden;">
+        <header class="workspace-chrome">
+          <div class="workspace-chrome__primary">
+            <div class="workspace-chrome__titles">
+              <h1 class="workspace-chrome__title">Spacework</h1>
+              <p class="workspace-chrome__subtitle">Proyecto Aurora · <span class="spacework-project-stats">6 miembros <span class="spacework-role spacework-role--owner">Dueño</span></span></p>
+            </div>
+          </div>
+          <div class="workspace-chrome__secondary">
+            <nav class="spacework-tabs">
+              <button class="spacework-tab on"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/></svg> Archivos</button>
+              <button class="spacework-tab"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="12" rx="1"/><rect x="9" y="2" width="5" height="7" rx="1"/></svg> Tareas</button>
+              <button class="spacework-tab"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h8l2 2v10H3z"/></svg> Wiki</button>
+              <button class="spacework-tab"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="8" rx="1"/></svg> Presentación</button>
+              <button class="spacework-tab"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12V4h10v6H6z"/></svg> Chat <span class="spacework-live">en vivo</span></button>
+              <button class="spacework-tab"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 13a5 5 0 0 1 10 0"/></svg> Miembros</button>
+            </nav>
+          </div>
+          <div class="workspace-chrome__toolbar">
+            <button class="btn ghost">← Proyectos</button>
+            <button class="btn primary">+ Subir archivo</button>
+            <button class="btn">Invitar</button>
+          </div>
+        </header>
+        <div class="spacework-section pad">
+          <ul class="spacework-item-list">
+            <li class="spacework-item-row spacework-item-row--selected">
+              <span class="spacework-item-icon"><span class="file-icon">📄</span></span>
+              <span class="spacework-item-body">
+                <a class="spacework-item-title">Planos_Aurora_N3.dwg</a>
+                <span class="spacework-item-sub">2.4 MB · subido por María · hace 2 h</span>
+              </span>
+              <span class="spacework-item-kind">Archivo</span>
+            </li>
+            <li class="spacework-item-row">
+              <span class="spacework-item-icon spacework-item-icon--link">🔗</span>
+              <span class="spacework-item-body">
+                <a class="spacework-item-title">Carpeta compartida — Drive</a>
+                <span class="spacework-item-sub">drive.google.com · Diego</span>
+              </span>
+              <span class="spacework-item-kind">Enlace</span>
+            </li>
+            <li class="spacework-item-row">
+              <span class="spacework-item-icon"><span class="file-icon">📊</span></span>
+              <span class="spacework-item-body">
+                <a class="spacework-item-title">Presupuesto_v4.xlsx</a>
+                <span class="spacework-item-sub">88 KB · subido por ti · ayer</span>
+              </span>
+              <span class="spacework-item-kind">Archivo</span>
+            </li>
+          </ul>
+
+          <p class="life-widget-group-label" style="margin-top:1.3rem;">Tablero</p>
+          <div class="spacework-kanban" style="margin:0;">
+            <div class="spacework-kanban__board">
+              <div class="spacework-kanban__column">
+                <div class="spacework-kanban__column-head">Por hacer <span class="ds-count">2</span></div>
+                <div class="spacework-kanban__cards">
+                  <div class="spacework-kanban__card"><div class="spacework-kanban__title">Validar medidas en sitio</div><span class="spacework-kanban__due spacework-kanban__due--overdue">vencía ayer</span></div>
+                  <div class="spacework-kanban__card"><div class="spacework-kanban__title">Pedir muestras de acabado</div></div>
+                </div>
+              </div>
+              <div class="spacework-kanban__column">
+                <div class="spacework-kanban__column-head">En curso <span class="ds-count">1</span></div>
+                <div class="spacework-kanban__cards">
+                  <div class="spacework-kanban__card"><div class="spacework-kanban__title">Render del lobby</div><span class="spacework-kanban__due spacework-kanban__due--soon">en 2 d</span></div>
+                </div>
+              </div>
+              <div class="spacework-kanban__column">
+                <div class="spacework-kanban__column-head">Revisión <span class="ds-count">1</span></div>
+                <div class="spacework-kanban__cards">
+                  <div class="spacework-kanban__card"><div class="spacework-kanban__title">Memoria de cálculo</div></div>
+                </div>
+              </div>
+              <div class="spacework-kanban__column">
+                <div class="spacework-kanban__column-head">Hecho <span class="ds-count">3</span></div>
+                <div class="spacework-kanban__cards">
+                  <div class="spacework-kanban__card spacework-kanban__card--done"><div class="spacework-kanban__title">Permiso municipal</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="life-widget-group-label" style="margin-top:1.3rem;">Miembros</p>
+          <ul class="spacework-member-list">
+            <li class="spacework-member-row">
+              <span class="spacework-member-main">
+                <span class="spacework-avatar spacework-avatar--md" style="background:hsl(210 42% 40%)">MV</span>
+                <span class="spacework-member-text"><span class="spacework-member-name">María Vega</span><span class="spacework-member-you">tú</span></span>
+              </span>
+              <span class="spacework-member-actions"><span class="spacework-role spacework-role--owner">Dueño</span></span>
+            </li>
+            <li class="spacework-member-row">
+              <span class="spacework-member-main">
+                <span class="spacework-avatar spacework-avatar--md" style="background:hsl(150 42% 40%)">DR</span>
+                <span class="spacework-member-text"><span class="spacework-member-name">Diego Rivas</span></span>
+              </span>
+              <span class="spacework-member-actions"><span class="spacework-role spacework-role--admin">Admin</span></span>
+            </li>
+            <li class="spacework-member-row">
+              <span class="spacework-member-main">
+                <span class="spacework-avatar spacework-avatar--md" style="background:hsl(280 42% 40%)">LP</span>
+                <span class="spacework-member-text"><span class="spacework-member-name">Lucía Paz</span></span>
+              </span>
+              <span class="spacework-member-actions"><span class="spacework-role spacework-role--member">Miembro</span></span>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div style="height:60px"></div>
+    <script>
+      const root = document.documentElement;
+      document.querySelectorAll(".prev-toggle button").forEach((b) => {
+        b.addEventListener("click", () => {
+          root.setAttribute("data-theme", b.dataset.t);
+          document.querySelectorAll(".prev-toggle button").forEach((x) => x.classList.toggle("on", x === b));
+        });
+      });
+    </script>
+  </body>
+</html>

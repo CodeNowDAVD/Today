@@ -1,0 +1,326 @@
+/* ============================================================================
+   SORBITS CONSOLE — sistema de diseño unificado (Life + Spacework)
+   Dark-first · denso · teclado primero · el color es señal, no adorno.
+   Fuente de verdad de tokens (--ds-*). Los temas de cada panel los consumen.
+   ============================================================================ */
+
+:root,
+[data-theme="dark"] {
+  /* superficies */
+  --ds-bg: #0a0b0d;
+  --ds-surface: #131519;
+  --ds-raised: #1c1f25;
+  --ds-inset: #0d0e11;
+  --ds-overlay: rgba(6, 7, 9, 0.6);
+
+  /* texto */
+  --ds-text: #f1f2f4;
+  --ds-text-muted: #9398a2;
+  --ds-text-faint: #61656e;
+
+  /* líneas */
+  --ds-line: #23262d;
+  --ds-line-strong: #30343c;
+
+  /* acento único (señal de selección/interacción, sobrio) */
+  --ds-accent: #7088ff;
+  --ds-accent-hi: #8b9dff;
+  --ds-accent-soft: rgba(112, 136, 255, 0.16);
+  --ds-accent-line: rgba(112, 136, 255, 0.42);
+  --ds-on-accent: #0a0b0d;
+
+  /* señales de estado/urgencia */
+  --ds-urgent: #f0555c;
+  --ds-urgent-soft: rgba(240, 85, 92, 0.15);
+  --ds-warn: #e8b339;
+  --ds-warn-soft: rgba(232, 179, 57, 0.15);
+  --ds-ok: #3ecf8e;
+  --ds-ok-soft: rgba(62, 207, 142, 0.15);
+
+  --ds-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ds-shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="light"] {
+  --ds-bg: #f4f5f7;
+  --ds-surface: #ffffff;
+  --ds-raised: #eceef1;
+  --ds-inset: #f0f1f4;
+  --ds-overlay: rgba(20, 22, 28, 0.32);
+
+  --ds-text: #15171c;
+  --ds-text-muted: #5f636d;
+  --ds-text-faint: #969ba6;
+
+  --ds-line: #e5e7eb;
+  --ds-line-strong: #d3d6dd;
+
+  --ds-accent: #4560e6;
+  --ds-accent-hi: #3a53d6;
+  --ds-accent-soft: rgba(69, 96, 230, 0.1);
+  --ds-accent-line: rgba(69, 96, 230, 0.4);
+  --ds-on-accent: #ffffff;
+
+  --ds-urgent: #d83a42;
+  --ds-urgent-soft: rgba(216, 58, 66, 0.1);
+  --ds-warn: #b5830a;
+  --ds-warn-soft: rgba(181, 131, 10, 0.12);
+  --ds-ok: #1f9d63;
+  --ds-ok-soft: rgba(31, 157, 99, 0.12);
+
+  --ds-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --ds-shadow-pop: 0 20px 48px rgba(0, 0, 0, 0.18);
+}
+
+/* radios, espacio, tipografía compartida */
+:root {
+  --ds-r1: 6px;
+  --ds-r2: 8px;
+  --ds-r3: 11px;
+  --ds-r-pill: 999px;
+
+  /* densidad: alto de fila/control base — sube para "cómodo", baja para "compacto" */
+  --ds-row-h: 2.1rem;
+  --ds-gap: 0.5rem;
+
+  --ds-font: "Inter", system-ui, -apple-system, sans-serif;
+  --ds-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  --ds-ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ——— primitivas compartidas ——— */
+
+/* etiqueta micro mono en mayúsculas — el sello del sistema */
+.ds-eyebrow {
+  font-family: var(--ds-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-text-faint);
+}
+
+/* números siempre tabulares dentro de los paneles */
+.life-panel,
+.spacework-panel {
+  font-feature-settings: "tnum" 1, "cv01" 1;
+}
+
+/* chip / contador mono */
+.ds-count {
+  font-family: var(--ds-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--ds-text-muted);
+  padding: 0.04rem 0.34rem;
+  border-radius: var(--ds-r-pill);
+  border: 1px solid var(--ds-line);
+  background: var(--ds-inset);
+}
+
+/* hint de atajo de teclado */
+.ds-kbd {
+  font-family: var(--ds-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.18rem 0.34rem;
+  border-radius: var(--ds-r1);
+  color: var(--ds-text-muted);
+  background: var(--ds-inset);
+  border: 1px solid var(--ds-line);
+  border-bottom-width: 2px;
+}
+
+/* ——— foco accesible: teclado primero ——— */
+.life-panel :focus-visible,
+.spacework-panel :focus-visible {
+  outline: 2px solid var(--ds-accent);
+  outline-offset: 1px;
+  border-radius: var(--ds-r1);
+}
+.life-panel :focus:not(:focus-visible),
+.spacework-panel :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ——— scrollbars finas dentro de los paneles ——— */
+.life-panel *,
+.spacework-panel * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ds-line-strong) transparent;
+}
+.life-panel *::-webkit-scrollbar,
+.spacework-panel *::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+.life-panel *::-webkit-scrollbar-thumb,
+.spacework-panel *::-webkit-scrollbar-thumb {
+  background: var(--ds-line-strong);
+  border-radius: var(--ds-r-pill);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.life-panel *::-webkit-scrollbar-thumb:hover,
+.spacework-panel *::-webkit-scrollbar-thumb:hover {
+  background: var(--ds-text-faint);
+  background-clip: content-box;
+}
+
+/* ——— chrome compartido (WorkspaceChrome) en ambos paneles ———
+   header pegajoso, hairline, denso */
+.life-panel .workspace-chrome,
+.spacework-panel .workspace-chrome {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in srgb, var(--ds-bg) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--ds-line);
+}
+
+.life-panel .workspace-chrome__primary,
+.spacework-panel .workspace-chrome__primary {
+  padding: 0.7rem 1.15rem 0.55rem;
+}
+
+.life-panel .workspace-chrome__title,
+.spacework-panel .workspace-chrome__title {
+  font-family: var(--ds-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ds-text-faint);
+}
+
+.life-panel .workspace-chrome__subtitle,
+.spacework-panel .workspace-chrome__subtitle {
+  color: var(--ds-text-muted);
+  font-size: 0.82rem;
+}
+
+.life-panel .workspace-chrome__secondary,
+.spacework-panel .workspace-chrome__secondary {
+  padding: 0 1.15rem;
+  border-bottom: none;
+  background: transparent;
+}
+
+/* ——— command palette (⌘K): fila de comando label + hint ——— */
+.global-search-cmd {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.global-search-cmd .global-search-hit__title {
+  font-weight: 500;
+}
+
+.global-search-cmd__hint {
+  flex-shrink: 0;
+  font-family: var(--ds-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.02em;
+  color: var(--ds-text-faint);
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r1);
+  background: var(--ds-inset);
+}
+
+.global-search-hit--active.global-search-cmd {
+  box-shadow: inset 2px 0 0 var(--ds-accent);
+}
+
+/* ——— controles dentro de los paneles: alineados al acento del sistema ———
+   especificidad > .btn.primary global, así que gana sin tocar el shell */
+.life-panel .btn,
+.spacework-panel .btn {
+  border-radius: var(--ds-r2);
+  border-color: var(--ds-line);
+  background: var(--ds-surface);
+  color: var(--ds-text);
+}
+
+.life-panel .btn:hover:not(:disabled),
+.spacework-panel .btn:hover:not(:disabled) {
+  background: var(--ds-raised);
+  border-color: var(--ds-line-strong);
+}
+
+.life-panel .btn.ghost,
+.spacework-panel .btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ds-text-muted);
+}
+
+.life-panel .btn.ghost:hover:not(:disabled),
+.spacework-panel .btn.ghost:hover:not(:disabled) {
+  color: var(--ds-text);
+  background: var(--ds-raised);
+}
+
+.life-panel .btn.primary,
+.spacework-panel .btn.primary {
+  background: var(--ds-accent);
+  border-color: var(--ds-accent);
+  color: var(--ds-on-accent);
+  font-weight: 600;
+}
+
+.life-panel .btn.primary:hover:not(:disabled),
+.spacework-panel .btn.primary:hover:not(:disabled) {
+  background: var(--ds-accent-hi);
+  border-color: var(--ds-accent-hi);
+  filter: none;
+}
+
+.life-panel .btn.danger,
+.spacework-panel .btn.danger {
+  color: var(--ds-urgent);
+}
+
+.life-panel .btn.primary.danger,
+.spacework-panel .btn.primary.danger {
+  background: var(--ds-urgent);
+  border-color: var(--ds-urgent);
+  color: #fff;
+}
+
+/* inputs / selects / textarea dentro de los paneles */
+.life-panel input[type="text"],
+.life-panel input[type="search"],
+.life-panel input[type="number"],
+.life-panel input[type="date"],
+.life-panel select,
+.life-panel textarea,
+.spacework-panel input[type="text"],
+.spacework-panel input[type="search"],
+.spacework-panel input[type="number"],
+.spacework-panel input[type="date"],
+.spacework-panel select,
+.spacework-panel textarea {
+  border-radius: var(--ds-r2);
+  border: 1px solid var(--ds-line);
+  background: var(--ds-inset);
+  color: var(--ds-text);
+}
+
+.life-panel input:focus,
+.life-panel select:focus,
+.life-panel textarea:focus,
+.spacework-panel input:focus,
+.spacework-panel select:focus,
+.spacework-panel textarea:focus {
+  outline: none;
+  border-color: var(--ds-accent);
+  box-shadow: 0 0 0 3px var(--ds-accent-soft);
+}
